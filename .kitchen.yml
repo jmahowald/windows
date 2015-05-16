@@ -24,6 +24,22 @@ platforms:
       box_url: http://cdn.box-cutter.com/windows/virtualbox4.3.20/eval-win81x64-enterprise-nocm-1.0.2.box
     provisioner:
       require_chef_omnibus: 11.16.4
+  - name: windows_2012
+    driver:
+      customize:
+        memory: 2048
+      box: mwrock/Windows2012R2
+      box_url: https://vagrantcloud.com/mwrock/Windows2012R2
+      communicator: winrm
+    transport:
+      name: winrm
+  - name: windows_2008
+    driver_config:
+      customize:
+        # Grant VM 2048 MB = 2 GB of memory. With default of 1 GB, basic operations (Exploring files, etc.) are rather slow
+        memory: 2048
+      box: windows_2008
+      box_url: http://cdn.box-cutter.genesys.com/windows/virtualbox4.3.20/eval-win81x64-enterprise-nocm-1.0.2.box     
   - name: windows-8.1-chef12
     driver_config:
       box: windows-8.1

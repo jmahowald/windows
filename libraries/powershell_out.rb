@@ -1,3 +1,5 @@
+
+
 class Chef
   module Mixin
     module PowershellOut
@@ -13,6 +15,8 @@ class Chef
       end
 
       def powershell_out(*command_args)
+        Chef::Log.info("calling off to script")
+
         script = command_args.first
         options = command_args.last.is_a?(Hash) ? command_args.last : nil
 
@@ -48,9 +52,23 @@ class Chef
           cmd = shell_out(command)
         end
 
+        #This is insane, but as per comments like 
+        #   Obviously, exit code 0 in PowerShell can signify 
+        #   anything from "the script ran perfectly" to 
+        #  your script is so utterly broken that PowerShell will be uninstalled
+        #
+        # (http://octopusdeploy.com/blog/powershell-exit-codes)
+        # we need to retrieve a better exit code
+       # cmd.status = shell_out("$LastExitCode").exitstatus
+
+
+
         if disable_redirection
           restore_wow64_file_redirection(node, original_redirection_state)
         end
+
+        Chef::Log.info("command info #{cmd.inspect}")
+
 
         cmd
       end
@@ -71,7 +89,9 @@ class Chef
           "-InputFormat None"
         ]
 
-        command = "powershell.exe #{flags.join(' ')} -Command \"#{script}\""
+        command = "powershell.exe #{flags.join(' ')} -Command \"#{script}\";"
+        
+
         command
       end
     end
