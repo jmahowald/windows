@@ -31,8 +31,10 @@ platforms:
       box: mwrock/Windows2012R2
       box_url: https://vagrantcloud.com/mwrock/Windows2012R2
       communicator: winrm
-    transport:
-      name: winrm
+      network:
+      - ["forwarded_port", {guest: 3389, host: 33899, id: "rdp"}]
+
+
   - name: windows_2008
     driver_config:
       customize:
